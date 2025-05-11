@@ -1,0 +1,38 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>文件处理</title>
+</head>
+<body>
+  <h2>上传文件</h2>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="file" />
+    <button type="submit">上传并处理</button>
+  </form>
+
+  <br>
+  <a id="downloadLink" href="#" style="display:none;">下载处理结果</a>
+
+  <script>
+    document.getElementById("uploadForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+
+      const response = await fetch("/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        const downloadLink = document.getElementById("downloadLink");
+        downloadLink.href = `/download/${result.filename}`;
+        downloadLink.style.display = "inline";
+        downloadLink.innerText = "下载处理结果";
+      }
+    });
+  </script>
+</body>
+</html>
